@@ -4,6 +4,7 @@ import org.springframework.hateoas.Link;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -13,10 +14,13 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false) // Adicione esta linha
 public class InsuranceContractDTO extends RepresentationModel<InsuranceContractDTO> {
     private long id;
+
     @NotNull(message = "O Objeto do Contrato não pode ser nulo")
     private String insuranceObject;
+
     private ZonedDateTime signTimeStamp;
     private ZonedDateTime endCoverageTimeStamp;
     private List<CoverageDTO> coverageList;

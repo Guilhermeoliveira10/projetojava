@@ -30,7 +30,6 @@ import java.util.Optional;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-
 // Controller Class
 @RestController
 @RequestMapping("/insurancecontracts")
@@ -99,15 +98,23 @@ public class InsuranceContractController {
 
     // Get expired insurance contracts
     @GetMapping("/expired")
-    public ResponseEntity<List<InsuranceContractDTO>> getExpiredContracts() {
+    public ResponseEntity<CollectionModel<InsuranceContractDTO>> getExpiredContracts() {
         List<InsuranceContractDTO> expiredContracts = insuranceContractService.getExpiredContracts();
-        return ResponseEntity.ok(expiredContracts);
+        CollectionModel<InsuranceContractDTO> results = CollectionModel.of(expiredContracts);
+
+        // Adding links
+        Link linkToAll = WebMvcLinkBuilder.linkTo(methodOn(InsuranceContractController.class).getAllInsuranceContracts()).withRel("allContracts");
+        results.add(linkToAll);
+
+        return ResponseEntity.ok(results);
     }
 
     // Delete an insurance contract by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInsuranceContractById(@PathVariable long id) {
         insuranceContractService.deleteInsuranceContractById(id);
+
+        // Returning no content response
         return ResponseEntity.noContent().build();
     }
 }
